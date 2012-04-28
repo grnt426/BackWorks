@@ -68,8 +68,14 @@ public class Painter extends JPanel implements ActionListener {
 
 	public void actionPerformed(ActionEvent e) {
 
-		 // the only event we should ever get (for now) is the a repaint
-		// event
+		Object src = e.getSource();
+
+		if(src instanceof Model){
+
+			// reset event
+			mission = ((Model) src).getCurrentMission();
+		}
+
 		repaint();
 	}
 }

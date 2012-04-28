@@ -65,7 +65,15 @@ public class PlayerMovable extends Movable{
 		setDirection(next_direction);
 	}
 
-	private void setNextDirection(Direction direction) {
+	public void setNextDirection(Direction direction) {
 		next_direction = direction;
+	}
+
+	public Direction getNextDirection() {
+		return next_direction;
+	}
+
+	public PlayerMovable getNextRobot() {
+		return next_robot;
 	}
 }

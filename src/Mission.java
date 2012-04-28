@@ -64,6 +64,7 @@ public class Mission {
 	public void moveRobots(Direction d){
 		first_robot.setDirection(d);
 		first_robot.move();
+		first_robot.setNextDirection(d); // Need this for when flushing
 	}
 
 	public void moveObjects(Movement d){
@@ -86,5 +87,16 @@ public class Mission {
 
 	public Tile getTile(int newX, int newY) {
 		return board.get(newY).get(newX);
+	}
+
+	public boolean commandsFlushed() {
+		PlayerMovable pm = first_robot;
+		while(pm != null){
+//			Model.printDebug("commandsFlushed()", pm.getDirection().name());
+			if(pm.getDirection() != Direction.HALT)
+				return false;
+			pm = pm.getNextRobot();
+		}
+		return true;
 	}
 }

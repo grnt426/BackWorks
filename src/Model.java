@@ -185,10 +185,17 @@ public class Model {
 		}
 		running = false;
 		paused = false;
+		end = false;
+		game.reset();
 		printDebug("run()", "Resetting Simulation!");
 
 		current_mission = missions.get(
 				current_mission.getMissionNumber() - 1).clone();
+
+		// let the painter know its mission object is out of date
+		listener.actionPerformed(new ActionEvent(this,
+				ActionEvent.ACTION_PERFORMED,
+				"reset"));
 	}
 
 	public class GameSimulation implements Runnable{
@@ -234,7 +241,26 @@ public class Model {
 						}
 					}
 					else{
-						end = true;
+
+						// Make sure all Robots consume remaining commands
+						current_mission.moveRobots(Direction.HALT);
+						if(!current_mission.commandsFlushed()){
+
+							// tell listeners of the game state change
+							listener.actionPerformed(new ActionEvent(this,
+									ActionEvent.ACTION_PERFORMED,
+									"changed"));
+
+							try {
+								Thread.sleep(750);
+							} catch (InterruptedException e) {
+								e.printStackTrace();
+							}
+						}
+						else{
+							end = true;
+							printDebug("run()", "END REACHED!");
+						}
 
 						// game end, run other logic
 					}
@@ -245,7 +271,7 @@ public class Model {
 		}
 
 		public void reset(){
-			ready = false;
+			step = 0;
 		}
 	}
 }
