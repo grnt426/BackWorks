@@ -1,3 +1,5 @@
+import com.sun.xml.internal.ws.message.EmptyMessageImpl;
+
 /**
  * Author:      Grant Kurtz
  */
@@ -24,25 +26,33 @@ public class PlayerMovable extends Movable{
 	@Override
 	public void move() {
 
-		// Put back the last tile that was here
-		if(previousTile == null)
-			mission.setTile(ourTile.getXCell(), ourTile.getYCell(),
-					new EmptyTile(ourTile.getXCell(), ourTile.getYCell()));
-		else
-			mission.setTile(ourTile.getXCell(), ourTile.getYCell(),
-					previousTile);
+		// compute new direction
+		int newX = ourTile.getXCell() + Movement.getXComponent(getDirection());
+		int newY = ourTile.getYCell() + Movement.getYComponent(getDirection());
 
-		// move ourselves
-		ourTile.setXCell(ourTile.getXCell() +
-				Movement.getXComponent(getDirection()));
-		ourTile.setYCell(ourTile.getYCell() +
-				Movement.getYComponent(getDirection()));
-		previousTile = mission.setTile(ourTile.getXCell(), ourTile.getYCell(),
-				ourTile);
+		// check the new location for special conditions
+		Tile newLocation = mission.getTile(newX, newY);
+		if(newLocation instanceof RobotTile &&
+				getDirection() != Direction.HALT){
+			System.out.println("ROBOTS CRASHED! X: " + newX + " Y: " + newY);
+			System.out.println("TILE: " + mission.getTile(newX, newY));
+		}
+		else if(!(newLocation instanceof WallTile)){
 
-		// Player DUN FUCKED UP!
-		if(previousTile instanceof RobotTile){
-			System.out.println("ROBOTS CRASHED!");
+			// Put back the last tile that was here
+			if(previousTile == null)
+				mission.setTile(ourTile.getXCell(), ourTile.getYCell(),
+						new EmptyTile(ourTile.getXCell(), ourTile.getYCell()));
+			else
+				mission.setTile(ourTile.getXCell(), ourTile.getYCell(),
+						previousTile);
+
+			// move ourselves
+			ourTile.setXCell(newX);
+			ourTile.setYCell(newY);
+			previousTile = mission.setTile(ourTile.getXCell(), ourTile.getYCell(),
+					ourTile);
+
 		}
 
 		// give the robot after us the next direction to take

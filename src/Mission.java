@@ -71,4 +71,8 @@ public class Mission {
 	public int getMissionNumber() {
 		return mission_number;
 	}
+
+	public Tile getTile(int newX, int newY) {
+		return board.get(newY).get(newX);
+	}
 }
