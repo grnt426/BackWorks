@@ -1,7 +1,9 @@
+import java.awt.*;
+
 /**
  * Author:      Grant Kurtz
  */
-public class Tile {
+public abstract class Tile {
 
 	static Tile TileFactory(char t){
 		switch(t){
@@ -19,4 +21,6 @@ public class Tile {
 				return new WallTile();
 		}
 	}
+
+	public abstract Image getImage();
 }

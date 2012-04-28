@@ -24,4 +24,8 @@ public class Mission {
 		}
 		return sb.toString();
 	}
+
+	public ArrayList<ArrayList<Tile>> getBoard() {
+		return board;
+	}
 }

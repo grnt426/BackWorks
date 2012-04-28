@@ -70,4 +70,12 @@ public class Model {
 	private void printDebug(String func, String msg){
 		System.out.println("DEBUG:\t" + func + "\n\t" + msg);
 	}
+
+	public int getRows() {
+		return rows;
+	}
+
+	public int getCols() {
+		return cols;
+	}
 }
