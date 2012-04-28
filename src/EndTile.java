@@ -11,7 +11,10 @@ public class EndTile extends Tile {
 
 	static BufferedImage image;
 
-	public EndTile(){
+	public EndTile(int x, int y){
+		super(false, false);
+		setXCell(x);
+		setYCell(y);
 		try {
 			image = ImageIO.read(new File("images/End.jpg"));
 		} catch (IOException e) {

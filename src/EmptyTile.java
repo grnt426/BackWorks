@@ -11,7 +11,10 @@ public class EmptyTile extends Tile {
 
 	static BufferedImage image;
 
-	public EmptyTile(){
+	public EmptyTile(int x, int y){
+		super(false, false);
+		setXCell(x);
+		setYCell(y);
 		try {
 			image = ImageIO.read(new File("images/Empty.jpg"));
 		} catch (IOException e) {

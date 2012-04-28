@@ -7,11 +7,14 @@ import java.io.IOException;
 /**
  * Author:      Grant Kurtz
  */
-public class StartTile extends Tile {
+public class RobotTile extends Tile {
 
 	static BufferedImage image;
 
-	public StartTile(){
+	public RobotTile(int x, int y){
+		super(true, false);
+		setXCell(x);
+		setYCell(y);
 		try {
 			image = ImageIO.read(new File("images/Robot.jpg"));
 		} catch (IOException e) {

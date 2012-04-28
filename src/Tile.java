@@ -5,20 +5,54 @@ import java.awt.*;
  */
 public abstract class Tile {
 
-	static Tile TileFactory(char t){
+	private boolean playerMovable;
+	private boolean objectMovable;
+	private int xCell;
+	private int yCell;
+
+	public Tile(boolean playerMovable, boolean objectMovable){
+		this.playerMovable = playerMovable;
+		this.objectMovable = objectMovable;
+	}
+
+	public void setXCell(int xCell){
+		this.xCell = xCell;
+	}
+
+	public void setYCell(int yCell) {
+		this.yCell = yCell;
+	}
+
+	public int getXCell() {
+		return xCell;
+	}
+
+	public int getYCell() {
+		return yCell;
+	}
+
+	public boolean playerMovable(){
+		return playerMovable;
+	}
+
+	public boolean objectMovable(){
+		return objectMovable;
+	}
+
+	public static Tile TileFactory(char t, int c, int r){
 		switch(t){
 			case ' ':
-				return new EmptyTile();
+				return new EmptyTile(c, r);
 			case 'e':
 			case 'E':
-				return new EndTile();
+				return new EndTile(c, r);
 			case 'r':
 			case 'R':
-				return new StartTile();
+				return new RobotTile(c, r);
 			case 'x':
 			case 'X':
 			default:
-				return new WallTile();
+				return new WallTile(c, r);
 		}
 	}
 

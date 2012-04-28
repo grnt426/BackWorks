@@ -12,7 +12,10 @@ public class WallTile extends Tile {
 
 	static BufferedImage image;
 
-	public WallTile(){
+	public WallTile(int x, int y){
+		super(false, false);
+		setXCell(x);
+		setYCell(y);
 		try {
 			image = ImageIO.read(new File("images/Wall.jpg"));
 		} catch (IOException e) {

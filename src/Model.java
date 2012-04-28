@@ -14,10 +14,12 @@ public class Model {
 	private int rows, cols;
 	private int mission_count;
 	private Mission current_mission;
+	private ArrayList<Direction> moveList;
 
 	public Model() throws IOException {
 		missions = new ArrayList<Mission>();
 		createMissions();
+		moveList = new ArrayList<Direction>();
 	}
 
 	private void createMissions() throws IOException {
@@ -45,7 +47,7 @@ public class Model {
 				String line = br.readLine();
 				//printDebug("createMissions()", "INPUT LINE: " + line);
 				for(int c = 0; c < cols; c++){
-					row.add(Tile.TileFactory(line.charAt(c)));
+					row.add(Tile.TileFactory(line.charAt(c), c, r));
 				}
 				board.add(row);
 			}
@@ -63,11 +65,20 @@ public class Model {
 		current_mission = missions.get(0);
 	}
 
+	public Mission nextMission(){
+		if(current_mission.getMissionNumber() == mission_count){
+			System.out.println("WIN!");
+			return null;
+		}
+		return current_mission = missions.get(
+				current_mission.getMissionNumber());
+	}
+
 	public Mission getCurrentMission(){
 		return current_mission;
 	}
 
-	private void printDebug(String func, String msg){
+	public static void printDebug(String func, String msg){
 		System.out.println("DEBUG:\t" + func + "\n\t" + msg);
 	}
 
