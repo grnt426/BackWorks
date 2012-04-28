@@ -6,3 +6,17 @@ X        X
 X        X
 X        X
 XXXXXXXXXX
+Boss:   Welcome to your first day at BackWorks! My name is Arford Clex\n
+    and here at BackWorks you will solve some of the hardest (easiest)
+    challenges in advanced synchronized robotic control. I must admit that our 
+    facilities aren't exactly up to spec, but we strive to make anything 
+    possible with synergized group communication and *manager level bizspeak*.
+*Speaker*	Warning, stage 4 quantum field collapse eminent in
+    Serial Robot Control #1.  Warning, stage 4-
+Boss:   We better get you down there quick, no time for proper training, you
+    will just have to figure out the controls and try to get the Serial
+    Robots back on their charging pads! Our last intern, whom we also
+    didn't properly train, did not move the robots back to their charge
+    pads once he finished his task. If the robots are not properly charged
+    their fusion reactor's quantum containment field will collapse,
+    destroying everything!

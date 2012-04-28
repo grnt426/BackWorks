@@ -13,6 +13,9 @@ public class Mission {
 	private ArrayList<Movable> objects;
 	private int mission_number;
 	private ActionListener listener;
+	private String endMissionText;
+	private String startMissionText;
+	private String current_mi;
 
 	public Mission(int mc, ArrayList<ArrayList<Tile>> board){
 		mission_number = mc;
@@ -122,5 +125,13 @@ public class Mission {
 	public void stateChange(PlayerMovable playerMovable) {
 		listener.actionPerformed(new ActionEvent(playerMovable,
 				ActionEvent.ACTION_PERFORMED, "stateChange"));
+	}
+
+	public void setStartMissionText(String s) {
+		startMissionText = s;
+	}
+
+	public String getStartMissionText() {
+		return startMissionText;
 	}
 }

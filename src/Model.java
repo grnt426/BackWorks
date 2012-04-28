@@ -80,8 +80,16 @@ public class Model {
 				board.add(row);
 			}
 
+			StringBuilder sb = new StringBuilder();
+			String line;
+			while((line = br.readLine()) != null){
+				sb.append(line);
+			}
+
 			Mission m = new Mission((mc + 1), board);
+			m.setStartMissionText(sb.toString());
 			System.out.println(m);
+			System.out.println(m.getStartMissionText());
 			missions.add(m);
 		}
 	}
@@ -94,13 +102,11 @@ public class Model {
 		game.updateListener();
 	}
 
-	public Mission nextMission(){
-		if(current_mission.getMissionNumber() == mission_count){
-			System.out.println("WIN!");
-			return null;
-		}
-		return current_mission = missions.get(
-				current_mission.getMissionNumber());
+	public void nextMission(){
+		if(current_mission.getMissionNumber() == mission_count)
+			return;
+		current_mission = missions.get(current_mission.getMissionNumber());
+		reset();
 	}
 
 	public Mission getCurrentMission(){

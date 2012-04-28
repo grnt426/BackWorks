@@ -1,4 +1,5 @@
 import javax.swing.*;
+import javax.swing.text.DefaultCaret;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -25,12 +26,13 @@ public class View implements ActionListener{
 	JButton upControl = new JButton("^");
 	JButton downControl = new JButton("V");
 	JButton haltControl = new JButton("Halt");
-	JTextArea moveTextList = new JTextArea(30, 10);
+	JTextArea moveTextList = new JTextArea(27, 10);
 	JButton runControl = new JButton("Run!");
 	JButton clearControl = new JButton("Clear");
 	JButton resetControl = new JButton("Reset");
 	JButton removeControl = new JButton("Remove");
 	JTextArea messageBox = new JTextArea(8, 80);
+	JButton nextControl = new JButton("Next");
 
 	public View(Model m) {
 		this.model = m;
@@ -61,10 +63,12 @@ public class View implements ActionListener{
 		moveTextScroller.setVerticalScrollBarPolicy(
 				ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		moveListPanel.add(moveTextScroller);
+		DefaultCaret caret = (DefaultCaret) moveTextList.getCaret();
+		caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
 
 		// Create movement control buttons
 		JPanel moveControl = new JPanel();
-		moveControl.setLayout(new GridLayout(3, 3));
+		moveControl.setLayout(new GridLayout(4, 3));
 		moveControl.add(clearControl);
 		moveControl.add(upControl);
 		moveControl.add(resetControl);
@@ -74,6 +78,9 @@ public class View implements ActionListener{
 		moveControl.add(runControl);
 		moveControl.add(downControl);
 		moveControl.add(removeControl);
+		moveControl.add(new JLabel());
+		moveControl.add(nextControl);
+		moveControl.add(new JLabel());
 
 		// Setup mnemonics for the buttons, because whatever
 		upControl.setMnemonic('w');
@@ -149,6 +156,16 @@ public class View implements ActionListener{
 				}
 			}
 		});
+		nextControl.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if(model.getVictory()){
+					runControl.setText("Run!");
+					model.clearMoveList();
+					moveTextList.setText("");
+					model.nextMission();
+				}
+			}
+		});
 
 		// Create panel to contain movement list and move buttons
 		JPanel movePanel = new JPanel();
@@ -169,6 +186,8 @@ public class View implements ActionListener{
 		messageScroller.setAutoscrolls(true);
 		messageScroller.setVerticalScrollBarPolicy(
 				ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+		caret = (DefaultCaret) messageBox.getCaret();
+		caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
 		messageBox.setWrapStyleWord(true);
 		messagePanel.add(messageScroller);
 		window.getContentPane().add(messagePanel, BorderLayout.SOUTH);
@@ -267,7 +286,7 @@ public class View implements ActionListener{
 
 		if(msg.equals("crashed")){
 			appendMessage("Failure, your stupid has blown the town to"
-							+ " dust!");
+					+ " dust!");
 		}
 		else if(msg.equals("trapped")){
 			appendMessage("Failure, your dumb has trapped the world's most" +
