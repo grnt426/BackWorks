@@ -37,6 +37,18 @@ public class Mission {
 		}
 	}
 
+	public Mission clone(){
+		ArrayList<ArrayList<Tile>> newBoard = new ArrayList<ArrayList<Tile>>();
+		for(ArrayList<Tile> rows : board){
+			ArrayList<Tile> newBoardRow = new ArrayList<Tile>();
+			for(Tile t : rows){
+				newBoardRow.add(t.clone());
+			}
+			newBoard.add(newBoardRow);
+		}
+		return new Mission(this.mission_number, newBoard);
+	}
+
 	public String toString(){
 		StringBuilder sb = new StringBuilder();
 		sb.append("Mission: #").append(mission_number).append("\n");

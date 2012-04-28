@@ -15,6 +15,11 @@ public abstract class Tile {
 		this.objectMovable = objectMovable;
 	}
 
+	public Tile clone(){
+		return Tile.TileFactory(this.toString().charAt(0), getXCell(),
+				getYCell());
+	}
+
 	public void setXCell(int xCell){
 		this.xCell = xCell;
 	}

@@ -15,11 +15,17 @@ public class Model {
 	private int mission_count;
 	private Mission current_mission;
 	private ArrayList<Direction> moveList;
+	private boolean paused;
+	private boolean running;
 
 	public Model() throws IOException {
 		missions = new ArrayList<Mission>();
 		createMissions();
 		moveList = new ArrayList<Direction>();
+
+		// Set state info
+		running = false;
+		paused = false;
 	}
 
 	private void createMissions() throws IOException {
@@ -62,7 +68,7 @@ public class Model {
 	 * Starts the game
 	 */
 	public void start() {
-		current_mission = missions.get(0);
+		current_mission = missions.get(0).clone();
 	}
 
 	public Mission nextMission(){
@@ -88,5 +94,61 @@ public class Model {
 
 	public int getCols() {
 		return cols;
+	}
+
+	public void addDirection(Direction d){
+		moveList.add(d);
+	}
+
+	public void removeDirection(){
+		if(moveList.size() != 0)
+			moveList.remove(moveList.size()-1);
+	}
+
+	public void removeNthDirection(int index){
+		if(moveList.size() > index)
+			moveList.remove(index);
+	}
+
+	public void clearMoveList(){
+		moveList.clear();
+	}
+
+	public ArrayList<Direction> getMoveList() {
+		return moveList;
+	}
+
+	public void pause() {
+		paused = true;
+	}
+
+	public boolean isPausable() {
+		return (running && !paused);
+	}
+
+	public boolean isPaused() {
+		return paused;
+	}
+
+	public void resume() {
+		paused = false;
+	}
+
+	public boolean isRunning() {
+		return running;
+	}
+
+	public void run() {
+		printDebug("run()", "Running Simulation!");
+		running = true;
+	}
+
+	public void reset() {
+		running = false;
+		paused = false;
+		printDebug("run()", "Resetting Simulation!");
+
+		current_mission = missions.get(
+				current_mission.getMissionNumber() - 1).clone();
 	}
 }
