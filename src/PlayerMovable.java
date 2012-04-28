@@ -46,8 +46,10 @@ public class PlayerMovable extends Movable{
 		}
 
 		// give the robot after us the next direction to take
-		if(next_robot != null)
+		if(next_robot != null){
 			next_robot.setNextDirection(getDirection());
+			next_robot.move();
+		}
 
 		// set our new direction to our next one
 		setDirection(next_direction);
