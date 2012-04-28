@@ -25,11 +25,12 @@ public class View implements ActionListener{
 	JButton upControl = new JButton("^");
 	JButton downControl = new JButton("V");
 	JButton haltControl = new JButton("Halt");
-	JTextArea moveTextList = new JTextArea(20, 10);
+	JTextArea moveTextList = new JTextArea(30, 10);
 	JButton runControl = new JButton("Run!");
 	JButton clearControl = new JButton("Clear");
 	JButton resetControl = new JButton("Reset");
 	JButton removeControl = new JButton("Remove");
+	JTextArea messageBox = new JTextArea(8, 80);
 
 	public View(Model m) {
 		this.model = m;
@@ -159,7 +160,41 @@ public class View implements ActionListener{
 		// Add the control scheme to the primary window
 		window.getContentPane().add(movePanel, BorderLayout.EAST);
 
-		// Adjust the window size to fit all the elements snuggly
+		// Add the message box to the window
+		JPanel messagePanel = new JPanel();
+		JScrollPane messageScroller = new JScrollPane(messageBox);
+		messageScroller.setHorizontalScrollBar(null);
+		messageScroller.setHorizontalScrollBarPolicy(
+				ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+		messageScroller.setAutoscrolls(true);
+		messageScroller.setVerticalScrollBarPolicy(
+				ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+		messageBox.setWrapStyleWord(true);
+		messagePanel.add(messageScroller);
+		window.getContentPane().add(messagePanel, BorderLayout.SOUTH);
+
+		// Give the initial message
+		messageBox.setText(
+			"Boss:\tWelcome to your first day at BackWorks! My name is Arford Clex"
+			+ " and here at BackWorks you will solve some of the hardest (easiest)"
+			+ " challenges in\n\tadvanced synchronized robotic control. I must"
+			+ " admit that our facilities aren't exactly up to spec, but we"
+			+ " strive to make anything possible with\n\tsynergized group"
+			+ " communication and *manager level bizspeak*.");
+		messageBox.setText(messageBox.getText() +
+			"\n*Speaker*\tWarning, stage 4 quantum field collapse eminent in"
+			+ " Serial Robot Control #1.  Warning, stage 4-");
+		messageBox.setText(messageBox.getText() +
+			"\nBoss:\tWe better get you down there quick, no time for proper"
+			+ " training, you will just have to figure out the controls and"
+			+ " try to get the Serial Robots back on\n\ttheir charging pads! Our"
+			+ " last intern, whom we also didn't properly train, did not move"
+			+ " the robots back to their charge pads once he finished his\n\ttask."
+			+ " If the robots are not properly charged their fusion reactor's"
+			+ " quantum containment field will collapse, destroying everything!"
+		);
+
+		// Adjust the window size to fit all the elements snugly
 		window.pack();
 
 		// Make everything visible now that all the assets are ready
@@ -221,16 +256,26 @@ public class View implements ActionListener{
 
 				// Check to see if we need to run a victory screen
 				if(model.getVictory()){
-					System.out.println("VICTORY!");
+					appendMessage("Victory, you have reached the charge pads!");
 				}
 				else{
-					System.out.println("FAILURE!");
+					appendMessage("Failure, your stupid has blown BackWorks to"
+							+ " smithereens!");
 				}
 			}
 		}
 
 		if(msg.equals("crashed")){
-			System.out.println("Crashed!");
+			appendMessage("Failure, your stupid has blown the town to"
+							+ " dust!");
 		}
+		else if(msg.equals("trapped")){
+			appendMessage("Failure, your dumb has trapped the world's most" +
+							" expensive robot to an eternity of no designation!");
+		}
+	}
+
+	private void appendMessage(String s) {
+		messageBox.setText(messageBox.getText() + "\n" + s);
 	}
 }

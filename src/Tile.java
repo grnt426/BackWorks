@@ -54,6 +54,12 @@ public abstract class Tile {
 			case 'r':
 			case 'R':
 				return new RobotTile(c, r);
+			case 's':
+			case 'S':
+				return new StickyTile(c, r);
+			case 't':
+			case 'T':
+				return new TrapTile(c, r);
 			case 'x':
 			case 'X':
 			default:

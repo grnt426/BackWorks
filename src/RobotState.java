@@ -3,5 +3,6 @@
  */
 public enum RobotState {
 	FINE,
-	CRASHED
+	CRASHED,
+	TRAPPED
 }

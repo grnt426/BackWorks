@@ -18,13 +18,18 @@ public class Model {
 	private int rows, cols;
 	private int mission_count;
 	private Mission current_mission;
+
+
 	private ArrayList<Direction> moveList;
+
+	// State values
 	private boolean paused;
 	private boolean running;
 	private boolean ready;
-	private GameSimulation game;
 	private boolean end;
 	private boolean victory;
+
+	private GameSimulation game;
 	private ArrayList<ActionListener> listeners;
 
 	public Model() throws IOException {
@@ -309,6 +314,11 @@ public class Model {
 									ActionEvent.ACTION_PERFORMED,
 									"crashed"));
 							break;
+						case TRAPPED:
+							end = true;
+							informListeners(new ActionEvent(pm,
+									ActionEvent.ACTION_PERFORMED,
+									"trapped"));
 					}
 				}
 			}
