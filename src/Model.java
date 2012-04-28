@@ -103,8 +103,10 @@ public class Model {
 	}
 
 	public void nextMission(){
-		if(current_mission.getMissionNumber() == mission_count)
+		if(current_mission.getMissionNumber() == mission_count){
+			current_mission = null;
 			return;
+		}
 		current_mission = missions.get(current_mission.getMissionNumber());
 		reset();
 	}

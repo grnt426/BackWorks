@@ -34,6 +34,8 @@ public class View implements ActionListener{
 	JTextArea messageBox = new JTextArea(8, 80);
 	JButton nextControl = new JButton("Next");
 
+	private boolean won = false;
+
 	public View(Model m) {
 		this.model = m;
 
@@ -158,11 +160,19 @@ public class View implements ActionListener{
 		});
 		nextControl.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if(model.getVictory()){
+				if(model.getVictory() && !won){
 					runControl.setText("Run!");
 					model.clearMoveList();
 					moveTextList.setText("");
 					model.nextMission();
+					if(model.getCurrentMission() == null && !won){
+						appendMessage("You WIN! Unfortunately, Arford Clex is"
+							+ " an incompetent evil mastermind bent on world"
+							+ " major projectification.  You have turned all"
+							+ " peoples on this planet into\nfailed major projects."
+							+ " Congrats, you fucker.");
+						won = true;
+					}
 				}
 			}
 		});
