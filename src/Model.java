@@ -24,12 +24,14 @@ public class Model {
 	private boolean ready;
 	private GameSimulation game;
 	private boolean end;
-	private ActionListener listener;
+	private boolean victory;
+	private ArrayList<ActionListener> listeners;
 
 	public Model() throws IOException {
 		missions = new ArrayList<Mission>();
 		createMissions();
 		moveList = new ArrayList<Direction>();
+		listeners = new ArrayList<ActionListener>();
 
 
 		// Set state info
@@ -84,6 +86,7 @@ public class Model {
 	 */
 	public void start() {
 		current_mission = missions.get(0).clone();
+		game.updateListener();
 	}
 
 	public Mission nextMission(){
@@ -144,7 +147,7 @@ public class Model {
 		while(!ready){
 
 		}
-		return (running && !paused);
+		return (running && !paused && !end);
 	}
 
 	public boolean isPaused() {
@@ -175,8 +178,8 @@ public class Model {
 		Thread t = new Thread();
 	}
 
-	public void setListener(ActionListener listener) {
-		this.listener = listener;
+	public void addListener(ActionListener listener){
+		listeners.add(listener);
 	}
 
 	public void reset() {
@@ -186,19 +189,29 @@ public class Model {
 		running = false;
 		paused = false;
 		end = false;
+		victory = false;
 		game.reset();
 		printDebug("run()", "Resetting Simulation!");
 
+		// get next mission, and make sure the GameSim is updated
 		current_mission = missions.get(
 				current_mission.getMissionNumber() - 1).clone();
+		game.updateListener();
 
 		// let the painter know its mission object is out of date
-		listener.actionPerformed(new ActionEvent(this,
+		informListeners(new ActionEvent(this,
 				ActionEvent.ACTION_PERFORMED,
 				"reset"));
+
 	}
 
-	public class GameSimulation implements Runnable{
+	public void informListeners(ActionEvent ae){
+		for(ActionListener al : listeners){
+			al.actionPerformed(ae);
+		}
+	}
+
+	public class GameSimulation implements Runnable, ActionListener {
 
 		private int step;
 
@@ -230,7 +243,7 @@ public class Model {
 						step++;
 
 						// tell listeners of the game state change
-						listener.actionPerformed(new ActionEvent(this,
+						informListeners(new ActionEvent(this,
 								ActionEvent.ACTION_PERFORMED,
 								"changed"));
 
@@ -247,7 +260,7 @@ public class Model {
 						if(!current_mission.commandsFlushed()){
 
 							// tell listeners of the game state change
-							listener.actionPerformed(new ActionEvent(this,
+							informListeners(new ActionEvent(this,
 									ActionEvent.ACTION_PERFORMED,
 									"changed"));
 
@@ -260,6 +273,10 @@ public class Model {
 						else{
 							end = true;
 							printDebug("run()", "END REACHED!");
+							checkEndState();
+							informListeners(new ActionEvent(this,
+									ActionEvent.ACTION_PERFORMED,
+									"end"));
 						}
 
 						// game end, run other logic
@@ -273,5 +290,36 @@ public class Model {
 		public void reset(){
 			step = 0;
 		}
+
+		public void updateListener(){
+			current_mission.setListener(this);
+		}
+
+		public void actionPerformed(ActionEvent e) {
+
+			Object src = e.getSource();
+
+			if(src instanceof PlayerMovable){
+				PlayerMovable pm = (PlayerMovable) src;
+				if(e.getActionCommand().equals("stateChange")){
+					switch(pm.getState()){
+						case CRASHED:
+							end = true;
+							informListeners(new ActionEvent(pm,
+									ActionEvent.ACTION_PERFORMED,
+									"crashed"));
+							break;
+					}
+				}
+			}
+		}
+	}
+
+	public boolean getVictory(){
+		return victory && end;
+	}
+
+	private void checkEndState() {
+		victory = current_mission.checkVictory();
 	}
 }

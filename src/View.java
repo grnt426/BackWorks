@@ -6,7 +6,7 @@ import java.awt.event.ActionListener;
 /**
  * Author:      Grant Kurtz
  */
-public class View {
+public class View implements ActionListener{
 
 	// Model to hold game state information
 	private Model model;
@@ -47,7 +47,8 @@ public class View {
 		painter = new Painter(model.getRows(), model.getCols());
 		painter.setMission(model.getCurrentMission());
 		window.getContentPane().add(painter, BorderLayout.CENTER);
-		model.setListener(painter);
+		model.addListener(painter);
+		model.addListener(this);
 
 		// Create movement command list
 		JPanel moveListPanel = new JPanel();
@@ -132,7 +133,7 @@ public class View {
 		});
 		resetControl.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if(model.isRunning()){
+				if(model.isRunning() && !model.getVictory()){
 					window.setTitle(gameName);
 					model.reset();
 					runControl.setText("Run!");
@@ -210,4 +211,26 @@ public class View {
 	}
 
 
+	public void actionPerformed(ActionEvent e) {
+
+		Object src = e.getSource();
+		String msg = e.getActionCommand();
+
+		if(src instanceof Model.GameSimulation){
+			if(msg.equals("end")){
+
+				// Check to see if we need to run a victory screen
+				if(model.getVictory()){
+					System.out.println("VICTORY!");
+				}
+				else{
+					System.out.println("FAILURE!");
+				}
+			}
+		}
+
+		if(msg.equals("crashed")){
+			System.out.println("Crashed!");
+		}
+	}
 }

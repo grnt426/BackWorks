@@ -10,6 +10,7 @@ public class PlayerMovable extends Movable{
 	private Tile ourTile;
 	private Tile previousTile;
 	private Mission mission;
+	private RobotState state;
 
 	public PlayerMovable(int xCell, int yCell, PlayerMovable next_robot,
 						 Tile tile, Mission m) {
@@ -18,6 +19,7 @@ public class PlayerMovable extends Movable{
 		this.next_robot = next_robot;
 		this.ourTile = tile;
 		this.mission = m;
+		state = RobotState.FINE;
 
 		// Don't allow ourselves to move at first
 		setDirection(Direction.HALT);
@@ -36,6 +38,8 @@ public class PlayerMovable extends Movable{
 				getDirection() != Direction.HALT){
 			System.out.println("ROBOTS CRASHED! X: " + newX + " Y: " + newY);
 			System.out.println("TILE: " + mission.getTile(newX, newY));
+			state = RobotState.CRASHED;
+			stateChange();
 		}
 		else if(!(newLocation instanceof WallTile)){
 
@@ -65,6 +69,10 @@ public class PlayerMovable extends Movable{
 		setDirection(next_direction);
 	}
 
+	private void stateChange() {
+		mission.stateChange(this);
+	}
+
 	public void setNextDirection(Direction direction) {
 		next_direction = direction;
 	}
@@ -75,5 +83,13 @@ public class PlayerMovable extends Movable{
 
 	public PlayerMovable getNextRobot() {
 		return next_robot;
+	}
+
+	public Tile getPreviousTile() {
+		return previousTile;
+	}
+
+	public RobotState getState() {
+		return state;
 	}
 }

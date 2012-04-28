@@ -1,3 +1,6 @@
+import javax.xml.bind.Unmarshaller;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 /**
@@ -9,12 +12,14 @@ public class Mission {
 	private PlayerMovable first_robot;
 	private ArrayList<Movable> objects;
 	private int mission_number;
+	private ActionListener listener;
 
 	public Mission(int mc, ArrayList<ArrayList<Tile>> board){
 		mission_number = mc;
 		this.board = board;
 
 		first_robot = null;
+		listener = null;
 
 		// Extract movable objects
 		for(ArrayList<Tile> row : board){
@@ -98,5 +103,24 @@ public class Mission {
 			pm = pm.getNextRobot();
 		}
 		return true;
+	}
+
+	public boolean checkVictory() {
+		PlayerMovable pm = first_robot;
+		while(pm != null){
+			if(!(pm.getPreviousTile() instanceof EndTile))
+				return false;
+			pm = pm.getNextRobot();
+		}
+		return true;
+	}
+
+	public void setListener(ActionListener listener) {
+		this.listener = listener;
+	}
+
+	public void stateChange(PlayerMovable playerMovable) {
+		listener.actionPerformed(new ActionEvent(playerMovable,
+				ActionEvent.ACTION_PERFORMED, "stateChange"));
 	}
 }
