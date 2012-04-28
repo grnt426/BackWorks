@@ -1,6 +1,10 @@
 import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
+import sun.plugin2.message.GetAppletMessage;
 
 import javax.swing.*;
+import javax.xml.bind.Unmarshaller;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.*;
 import java.util.ArrayList;
 
@@ -17,15 +21,26 @@ public class Model {
 	private ArrayList<Direction> moveList;
 	private boolean paused;
 	private boolean running;
+	private boolean ready;
+	private GameSimulation game;
+	private boolean end;
+	private ActionListener listener;
 
 	public Model() throws IOException {
 		missions = new ArrayList<Mission>();
 		createMissions();
 		moveList = new ArrayList<Direction>();
 
+
 		// Set state info
 		running = false;
 		paused = false;
+		ready = false;
+		end = false;
+
+		game = new GameSimulation();
+		Thread t = new Thread(game);
+		t.start();
 	}
 
 	private void createMissions() throws IOException {
@@ -119,18 +134,30 @@ public class Model {
 	}
 
 	public void pause() {
+		while(!ready){
+
+		}
 		paused = true;
 	}
 
 	public boolean isPausable() {
+		while(!ready){
+
+		}
 		return (running && !paused);
 	}
 
 	public boolean isPaused() {
+		while(!ready){
+
+		}
 		return paused;
 	}
 
 	public void resume() {
+		while(!ready){
+
+		}
 		paused = false;
 	}
 
@@ -139,16 +166,86 @@ public class Model {
 	}
 
 	public void run() {
+		while(!ready){
+
+		}
 		printDebug("run()", "Running Simulation!");
 		running = true;
+
+		Thread t = new Thread();
+	}
+
+	public void setListener(ActionListener listener) {
+		this.listener = listener;
 	}
 
 	public void reset() {
+		while(!ready){
+
+		}
 		running = false;
 		paused = false;
 		printDebug("run()", "Resetting Simulation!");
 
 		current_mission = missions.get(
 				current_mission.getMissionNumber() - 1).clone();
+	}
+
+	public class GameSimulation implements Runnable{
+
+		private int step;
+
+		public GameSimulation() {
+			step = 0;
+			ready = true; // can handle simulation state changes
+		}
+
+		public void run() {
+
+			// YOU SHALL NEVER PASS! Unless of course we get some kind of
+			// horrible ConcurrentModificationException, which should only
+			// happen if I am a shit programmer, or Java's scheduler throws
+			// me a hardball.  Of course, you could always kill the thread, but
+			// that isn't very nice, and is actually deprecated so you probably
+			// shouldn't because rules exist for reasons or something or so I
+			// was told. Also paragraphs.
+			while(true){
+				try {
+					Thread.sleep(10);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+
+				// simulate the game while we can
+				while(running && !paused && !end){
+					if(step < moveList.size()){
+						current_mission.moveRobots(moveList.get(step));
+						step++;
+
+						// tell listeners of the game state change
+						listener.actionPerformed(new ActionEvent(this,
+								ActionEvent.ACTION_PERFORMED,
+								"changed"));
+
+						try {
+							Thread.sleep(750);
+						} catch (InterruptedException e) {
+							e.printStackTrace();
+						}
+					}
+					else{
+						end = true;
+
+						// game end, run other logic
+					}
+				}
+
+				ready = true;
+			}
+		}
+
+		public void reset(){
+			ready = false;
+		}
 	}
 }

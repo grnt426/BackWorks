@@ -1,11 +1,13 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 /**
  * Author:      Grant Kurtz
  */
-public class Painter extends JPanel {
+public class Painter extends JPanel implements ActionListener {
 
 	private Mission mission;
 	private int rows, cols;
@@ -62,5 +64,12 @@ public class Painter extends JPanel {
 
 	public Dimension getPreferredSize(){
 		return new Dimension(panel_length, panel_height);
+	}
+
+	public void actionPerformed(ActionEvent e) {
+
+		 // the only event we should ever get (for now) is the a repaint
+		// event
+		repaint();
 	}
 }

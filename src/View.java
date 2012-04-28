@@ -47,6 +47,7 @@ public class View {
 		painter = new Painter(model.getRows(), model.getCols());
 		painter.setMission(model.getCurrentMission());
 		window.getContentPane().add(painter, BorderLayout.CENTER);
+		model.setListener(painter);
 
 		// Create movement command list
 		JPanel moveListPanel = new JPanel();
